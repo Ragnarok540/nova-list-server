@@ -1,0 +1,28 @@
+{
+  "name": "nova-list-server",
+  "version": "1.0.0",
+  "description": "NovaList server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ragnarok540/nova-list-server.git"
+  },
+  "keywords": [
+    "api",
+    "server"
+  ],
+  "author": "Edgar Nova",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ragnarok540/nova-list-server/issues"
+  },
+  "homepage": "https://github.com/Ragnarok540/nova-list-server#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "sqlite3": "^4.0.4"
+  }
+}
