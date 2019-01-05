@@ -30,8 +30,16 @@ app.route('/api/task').post((req, res) => {
 
   console.log(req.body);
 
-  db.run(`INSERT INTO TASK(NAME, DESCRIP, DEADLINEDATE, DEADLINETIME, URGENT, IMPORTANT, TSTATE) 
-          VALUES(?, ?, ?, ?, ?, ?, ?)`, req.body, function(err) {
+  let sql = `INSERT INTO TASK(name, 
+                              description, 
+                              deadline_date, 
+                              deadline_time, 
+                              urgent, 
+                              important, 
+                              task_state) 
+             VALUES(?, ?, ?, ?, ?, ?, ?)`;
+
+  db.run(sql, req.body, function(err) {
 
     if (err) {
       return console.error(err.message);
@@ -39,7 +47,7 @@ app.route('/api/task').post((req, res) => {
 
   });
 
-  res.send(201, req.body);
+  res.send( 201, req.body );
 
 });
 
@@ -49,7 +57,7 @@ app.route('/api/board/:state').get((req, res) => {
   const STATE = req.params['state'];
 
   let sql = `SELECT * FROM TASK
-             WHERE TSTATE = ?`;
+             WHERE task_state = ?`;
  
 	db.all(sql, [STATE], (err, rows) => {
 
@@ -63,3 +71,22 @@ app.route('/api/board/:state').get((req, res) => {
 
 });
 
+//SELECT AN SPECIFIED TASK
+app.route('/api/task-detail/:code').get((req, res) => {
+
+  const CODE = req.params['code'];
+
+  let sql = `SELECT * FROM TASK
+             WHERE code = ?`;
+ 
+	db.get(sql, [CODE], (err, row) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, row );
+
+	});
+
+});
