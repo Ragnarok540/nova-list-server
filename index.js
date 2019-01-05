@@ -25,23 +25,41 @@ let db = new sqlite3.Database('./db/nova_list.db', sqlite3.OPEN_READWRITE, (err)
   console.log('Connected to the nova-list database.');
 });
 
-app.route('/api/cats').get((req, res) => {
-  res.send({
-    cats: [{ name: 'lilly' }, { name: 'lucy' }]
-  });
-});
-
+// INSERT NEW TASK
 app.route('/api/task').post((req, res) => {
 
   console.log(req.body);
 
-  db.run('INSERT INTO TASK(NAME, DESCRIP, DEADLINEDATE, DEADLINETIME, URGENT, IMPORTANT, TSTATE) VALUES(?, ?, ?, ?, ?, ?, ?)', req.body, function(err) {
+  db.run(`INSERT INTO TASK(NAME, DESCRIP, DEADLINEDATE, DEADLINETIME, URGENT, IMPORTANT, TSTATE) 
+          VALUES(?, ?, ?, ?, ?, ?, ?)`, req.body, function(err) {
+
     if (err) {
-      return console.log(err.message);
+      return console.error(err.message);
     }
-    // get the last insert id
-    console.log(`A row has been inserted with rowid ${this.lastID}`);
+
   });
 
   res.send(201, req.body);
+
 });
+
+//SELECT ALL TASKS IN A SPECIFIED STATE
+app.route('/api/board/:state').get((req, res) => {
+
+  const STATE = req.params['state'];
+
+  let sql = `SELECT * FROM TASK
+             WHERE TSTATE = ?`;
+ 
+	db.all(sql, [STATE], (err, rows) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, rows );
+
+	});
+
+});
+
