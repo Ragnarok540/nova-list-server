@@ -28,8 +28,6 @@ let db = new sqlite3.Database('./db/nova_list.db', sqlite3.OPEN_READWRITE, (err)
 // INSERT NEW TASK
 app.route('/api/task').post((req, res) => {
 
-  console.log(req.body);
-
   let sql = `INSERT INTO TASK(name, 
                               description, 
                               deadline_date, 
@@ -92,21 +90,57 @@ app.route('/api/task-detail/:code').get((req, res) => {
 });
 
 //UPDATE STATE OF A TASK
-app.route('/api/task-detail/').patch((req, res) => {
-
-  console.log(req.body);
+app.route('/api/task-detail').patch((req, res) => {
 
   let sql = `UPDATE TASK
              SET task_state = ?
              WHERE code = ?`;
  
-	db.run(sql, req.body, (err, row) => {
+	db.run(sql, req.body, (err) => {
 
 	  if (err) {
 		return console.error(err.message);
 	  }
 
       res.send( 200, req.body );
+
+	});
+
+});
+
+//SELECT ALL ARCHIVED TASKS
+app.route('/api/archive').get((req, res) => {
+
+  let sql = `SELECT * FROM TASK
+             WHERE task_state = ?`;
+ 
+	db.all(sql, ['3'], (err, rows) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, rows );
+
+	});
+
+});
+
+//DELETE AN ARCHIVED TASK
+app.route('/api/archive/:code').delete((req, res) => {
+
+  const CODE = req.params['code'];
+
+  let sql = `DELETE FROM TASK
+             WHERE code = ?`;
+ 
+	db.run(sql, [CODE], (err) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.sendStatus(204);
 
 	});
 
