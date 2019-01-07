@@ -90,3 +90,24 @@ app.route('/api/task-detail/:code').get((req, res) => {
 	});
 
 });
+
+//UPDATE STATE OF A TASK
+app.route('/api/task-detail/').patch((req, res) => {
+
+  console.log(req.body);
+
+  let sql = `UPDATE TASK
+             SET task_state = ?
+             WHERE code = ?`;
+ 
+	db.run(sql, req.body, (err, row) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, req.body );
+
+	});
+
+});
