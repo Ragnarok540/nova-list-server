@@ -108,6 +108,30 @@ app.route('/api/task-detail').patch((req, res) => {
 
 });
 
+//UPDATE A TASK
+app.route('/api/task-detail').put((req, res) => {
+
+  let sql = `UPDATE TASK
+             SET name = ?, 
+                 description = ?, 
+                 deadline_date = ?, 
+                 deadline_time = ?, 
+                 urgent = ?, 
+                 important = ?
+             WHERE code = ?`;
+  
+	db.run(sql, req.body, (err) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, req.body );
+
+	});
+
+});
+
 //SELECT ALL ARCHIVED TASKS
 app.route('/api/archive').get((req, res) => {
 
