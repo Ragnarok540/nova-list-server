@@ -169,3 +169,42 @@ app.route('/api/archive/:code').delete((req, res) => {
 	});
 
 });
+
+//SELECT AN OPTION VALUE
+app.route('/api/options/:option_name').get((req, res) => {
+
+  const OPTION_NAME = req.params['option_name'];
+
+  let sql = `SELECT * FROM OPTIONS
+             WHERE option_name = ?`;
+ 
+	db.get(sql, [OPTION_NAME], (err, row) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, row );
+
+	});
+
+});
+
+//UPDATE AN OPTION VALUE
+app.route('/api/options').patch((req, res) => {
+
+  let sql = `UPDATE OPTIONS
+             SET option_value = ?
+             WHERE option_name = ?`;
+ 
+	db.run(sql, req.body, (err) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, req.body );
+
+	});
+
+});
