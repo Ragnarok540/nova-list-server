@@ -208,3 +208,21 @@ app.route('/api/options').patch((req, res) => {
 	});
 
 });
+
+//SELECT ALL TASKS
+app.route('/api/search/').get((req, res) => {
+
+
+  let sql = `SELECT * FROM TASK`;
+ 
+	db.all(sql, [], (err, rows) => {
+
+	  if (err) {
+		return console.error(err.message);
+	  }
+
+      res.send( 200, rows );
+
+	});
+
+});
