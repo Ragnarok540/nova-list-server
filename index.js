@@ -16,71 +16,8 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/task', require('./task/task.controller'));
+app.use('/option', require('./option/option.controller'));
 
 app.listen(8000, () => {
   console.log('Server started!');
-});
- 
-let db = new sqlite3.Database('./db/nova_list.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Connected to the nova-list database.');
-});
-
-//SELECT AN OPTION VALUE
-app.route('/api/options/:option_name').get((req, res) => {
-
-  const OPTION_NAME = req.params['option_name'];
-
-  let sql = `SELECT * FROM OPTIONS
-             WHERE option_name = ?`;
- 
-	db.get(sql, [OPTION_NAME], (err, row) => {
-
-	  if (err) {
-		return console.error(err.message);
-	  }
-
-      res.send( 200, row );
-
-	});
-
-});
-
-//UPDATE AN OPTION VALUE
-app.route('/api/options').patch((req, res) => {
-
-  let sql = `UPDATE OPTIONS
-             SET option_value = ?
-             WHERE option_name = ?`;
- 
-	db.run(sql, req.body, (err) => {
-
-	  if (err) {
-		return console.error(err.message);
-	  }
-
-      res.send( 200, req.body );
-
-	});
-
-});
-
-//SELECT ALL TASKS
-app.route('/api/search/').get((req, res) => {
-
-
-  let sql = `SELECT * FROM TASK`;
- 
-	db.all(sql, [], (err, rows) => {
-
-	  if (err) {
-		return console.error(err.message);
-	  }
-
-      res.send( 200, rows );
-
-	});
-
 });

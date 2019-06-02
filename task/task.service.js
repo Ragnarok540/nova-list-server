@@ -3,6 +3,7 @@ const { db } = require('helpers/database');
 module.exports = { 
   create,
   read,
+  readAll,
   readState,
   update,
   updateState,
@@ -43,13 +44,25 @@ function read(req, res) {
                 WHERE code = ?`;
  
   db.get(sql, [CODE], (err, row) => {
-
     if (err) {
       return console.error(err.message);
     }
 
     res.status(200).send(row);
 
+  });
+}
+
+function readAll(req, res) {
+  const sql = `SELECT *
+               FROM TASK`;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+
+    res.status(200).send(rows);
   });
 }
 
@@ -121,6 +134,6 @@ function deleteTask(req, res) {
       return console.error(err.message);
     }
 
-    res.status(204).send({"message":"task deleted"});
+    res.status(204).send({ "message": "task deleted" });
   });
 }

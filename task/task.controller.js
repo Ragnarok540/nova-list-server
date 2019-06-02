@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/create', create);
 router.get('/read/:code', read);
+router.get('/read-all', readAll);
 router.get('/read-state/:state', readState);
 router.put('/update', update);
 router.patch('/update-state', updateState);
@@ -19,6 +20,10 @@ function create(req, res, next) {
 
 function read(req, res, next) {
   taskService.read(req, res);
+}
+
+function readAll(req, res, next) {
+  taskService.readAll(req, res);
 }
 
 function readState(req, res, next) {
