@@ -1,6 +1,6 @@
 const { db } = require('helpers/database');
 
-module.exports = { 
+module.exports = {
   create,
   read,
   readAll,
@@ -11,15 +11,17 @@ module.exports = {
 };
 
 function create(req, res) {
-  const sql = `INSERT 
-               INTO TASK (name, 
-                          description, 
-                          deadline_date, 
-                          deadline_time, 
-                          urgent, 
-                          important, 
-                          task_state) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT
+               INTO TASK (name,
+                          description,
+                          deadline_date,
+                          deadline_time,
+                          urgent,
+                          important,
+                          task_state,
+                          estimate,
+                          unit)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.run(sql, [req.body.name,
                req.body.description,
@@ -27,7 +29,9 @@ function create(req, res) {
                req.body.deadline_time,
                req.body.urgent,
                req.body.important,
-               "0"], function(err) {
+               "0",
+               req.body.estimate,
+               req.body.unit], function(err) {
     if (err) {
       return console.error(err.message);
     }
@@ -39,10 +43,10 @@ function create(req, res) {
 function read(req, res) {
   const CODE = req.params['code'];
 
-  const sql = `SELECT * 
+  const sql = `SELECT *
                  FROM TASK
                 WHERE code = ?`;
- 
+
   db.get(sql, [CODE], (err, row) => {
     if (err) {
       return console.error(err.message);
@@ -84,20 +88,24 @@ function readState(req, res) {
 
 function update(req, res) {
   const sql = `UPDATE TASK
-                  SET name = ?, 
-                      description = ?, 
-                      deadline_date = ?, 
-                      deadline_time = ?, 
-                      urgent = ?, 
-                      important = ?
+                  SET name = ?,
+                      description = ?,
+                      deadline_date = ?,
+                      deadline_time = ?,
+                      urgent = ?,
+                      important = ?,
+                      estimate = ?,
+                      unit = ?
                 WHERE code = ?`;
-  
+
   db.run(sql, [req.body.name,
                req.body.description,
                req.body.deadline_date,
                req.body.deadline_time,
                req.body.urgent,
                req.body.important,
+               req.body.estimate,
+               req.body.unit,
                req.body.code], (err) => {
     if (err) {
       return console.error(err.message);
@@ -111,8 +119,8 @@ function updateState(req, res) {
   const sql = `UPDATE TASK
                   SET task_state = ?
                 WHERE code = ?`;
- 
-  db.run(sql, [req.body.task_state, 
+
+  db.run(sql, [req.body.task_state,
                req.body.code], (err) => {
     if (err) {
       return console.error(err.message);
@@ -125,10 +133,10 @@ function updateState(req, res) {
 function deleteTask(req, res) {
   const CODE = req.params['code'];
 
-  const sql = `DELETE 
+  const sql = `DELETE
                  FROM TASK
                 WHERE code = ?`;
- 
+
   db.run(sql, [CODE], (err) => {
     if (err) {
       return console.error(err.message);
